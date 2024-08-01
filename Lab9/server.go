@@ -14,8 +14,14 @@ func indexHandler(w http.ResponseWriter, r *http.Request){
 }
 
 
+func dinamicaHandler(w http.ResponseWriter, r *http.Request){
+	tmpl.ExecuteTemplate(w,"dinamica.html", nil)
+}
+
+
 func main(){
 
 	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/dinamica", dinamicaHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
