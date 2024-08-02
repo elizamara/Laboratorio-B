@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Página Dinâmica</title>
   </head>
   <body>
-    <input type="button" value="Consulta" />
+    <div>
+      <h1>Digite um nome...</h1>
+      <form action="/submit" method="POST">
+        <label for="data">Nome</label>
+        <input type="text" id="data" name="data" />
+        <button type="submit">Enviar</button>
+      </form>
+    </div>
   </body>
 </html>
