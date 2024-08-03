@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 )
 
 /* Exemplo simples */
@@ -10,25 +12,32 @@ import (
 // Modifiquei para executar gorotinas concorrentes
 //1 cirei uma função para utilizar canal
 
-func Comunicacao1(canal1 chan int){
-	canal1 <- 13
+func Produtor(c chan int){
+	
+	for i:=0; i<3; i++ {
+		c <- rand.Intn(100)	
+		fmt.Printf("Enviando: %d\n", <-c)	
+		time.Sleep(1 * time.Second)
+	}
+
+	close(c)
 }
 
-func Comunicacao2(palavra chan string){
-	palavra <- "Aprovado"
+
+func Consumidor(c chan int){
+	for num := range c {
+		fmt.Printf("Retirando do canal: %d\n", num)
+	}
 }
 
 func main() {
-	canal1:= make(chan int)
-	go Comunicacao1(canal1)
+	c := make(chan int, 3)
+	
+	go Produtor(c)
 
-	canal2 := make(chan string)
-	go Comunicacao2(canal2)
+	go Consumidor(c)
 
-	mostrar:= <- canal1
-	fmt.Println(mostrar)
-	fmt.Println("-----------")
 
-	mostrar2:= <- canal2
-	fmt.Println(mostrar2)
+	time.Sleep(7 * time.Second)
+
 }
