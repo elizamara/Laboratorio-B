@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
 	"time"
 )
 
@@ -13,31 +12,45 @@ import (
 //1 cirei uma função para utilizar canal
 
 func Produtor(c chan int){
+	c <- 13
+	time.Sleep(1 * time.Second)
+	fmt.Printf("Enviando: %d\n", <-c)	
+}
+
+
+func Consumidor(c chan int){
+	fmt.Printf("Retira do canal: %d\n", <-c)	
+	c <- 0
+	//time.Sleep(1 * time.Second)
 	
-	for i:=0; i<3; i++ {
-		c <- rand.Intn(100)	
-		fmt.Printf("Enviando: %d\n", <-c)	
-		time.Sleep(1 * time.Second)
+}
+
+
+func extra(c chan int){
+	for {
+		 valor, ok := <-c 
+		 if ok {
+			fmt.Println(valor)
+		 }else{
+			break	
+		 }
 	}
 
 	close(c)
 }
 
 
-func Consumidor(c chan int){
-	for num := range c {
-		fmt.Printf("Retirando do canal: %d\n", num)
-	}
-}
-
 func main() {
-	c := make(chan int, 3)
+	c := make(chan int)
 	
 	go Produtor(c)
-
+	
 	go Consumidor(c)
-
-
+	
+	// for valor := range c {
+	// 	fmt.Println(valor)
+	// }
+	
 	time.Sleep(7 * time.Second)
 
 }
