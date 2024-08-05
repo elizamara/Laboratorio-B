@@ -5,42 +5,37 @@ import (
 	"time"
 )
 
-/* Exemplo simples */
+// Esse exeplo contem duas funcoes "Produtor" e "Cosumidor" utilizando uma espaço
+// compartilhado que chamo de produto.
 
-// Código inspirado na apostila fornecida na disciplia
-// Modifiquei para executar gorotinas concorrentes
-//1 cirei uma função para utilizar canal
+var produtos = make(chan int, 10) 
 
-func Produtor(c chan <- int){
-	c <- 13
-	time.Sleep(1 * time.Second)
-	fmt.Printf("Enviando: %d\n", c)	
-}
-
-
-func Consumidor(c <- chan int){
-
-}
-
-
-func extra(c chan int){
-	for {
-		 valor, ok := <-c 
-		 if ok {
-			fmt.Println(valor)
-		 }else{
-			break	
-		 }
+// Produtor envia dados
+func Produtor(){
+	for i := 0; i < 20; i++ { 
+		fmt.Printf("Enviado: %d\n", i)
+		produtos <- i 
+		time.Sleep(500 * time.Millisecond) 
 	}
+	close(produtos)
+}
 
-	close(c)
+// Retira dados da memoria que seria o produtor 
+func Consumidor(){
+	for item := range produtos { 
+		fmt.Printf("Consumindo: %d\n", item)
+		time.Sleep(1 * time.Second) 
+	}
 }
 
 
 func main() {
-	c := make(chan int)
 	
-	go Produtor(c)
-	//go Consumidor(c)
+	
+	go Produtor()
+	go Consumidor()
+
+	time.Sleep(25 * time.Second)
+	fmt.Println("Done.")
 
 }
